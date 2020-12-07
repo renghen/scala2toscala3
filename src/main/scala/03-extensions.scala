@@ -60,18 +60,15 @@ object ext_methods:
     
     def *(that : Rational) : Rational = Rational(ratio.numerator * that.numerator, ratio.denominator * that.denominator)  
   
-  @main
-  def testw() = 
-    val wer = Rational(1,2) + Rational(1,3)
-    println(wer)
-
   /**
    * EXERCISE 5
    * 
    * Convert this implicit syntax class to use extension methods.
    */
-  implicit class StringOps(self: String):
-    def equalsIgnoreCase(that: String) = self.toLowerCase == that.toLowerCase
+  // implicit class StringOps(self: String):
+  
+  extension (self : String):
+     def equalsIgnoreCase(that: String) = self.toLowerCase == that.toLowerCase   
 
   object scope:
     extension (s: String) def isSherlock: Boolean = s.startsWith("Sherlock")
@@ -82,4 +79,5 @@ object ext_methods:
    * Import the extension method `isSherlock` into the following object so the code will compile.
    */
   object test:
-    // "John Watson".isSherlock
+    import scope.isSherlock
+    "John Watson".isSherlock
