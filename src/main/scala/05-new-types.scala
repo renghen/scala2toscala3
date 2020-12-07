@@ -32,7 +32,7 @@ object intersection_types:
    * Form the intersection of the types `HasLogging` and `HasUserRepo` by using the type 
    * intersection operator `&`.
    */
-  type HasLoggingAndUserRepo
+  type HasLoggingAndUserRepo = HasLogging & HasUserRepo
 
   /**
    * EXERCISE 2
@@ -42,7 +42,9 @@ object intersection_types:
    */
   // IsEqual ...
 
-  def IsEqual[A, B](using ev: A =:= B) = ()
+  def IsEqual[A, B](using ev: A =:= B) = (ev.flip == ev)
+
+
 
   /**
    * EXERCISE 3
@@ -51,7 +53,9 @@ object intersection_types:
    * 
    * Create class that has the type `HasUserRepo & HasLogging`.
    */
-  class BothUserRepoAndLogging
+  class BothUserRepoAndLogging extends HasUserRepo with HasLogging:
+    def logging: Logging = ???
+    def userRepo: UserRepo = ???
 
 /**
  * UNION TYPES
@@ -80,7 +84,7 @@ object union_types:
    * Create a value of type `PaymentDeniedOrMissingAddress` by assigning the following variable to 
    * a `PaymentDenied` error.
    */
-  val example1: PaymentDeniedOrMissingAddress = ???
+  val example1: PaymentDeniedOrMissingAddress = PaymentDenied("not enough funds")
 
   /**
    * EXERCISE 3
@@ -88,7 +92,7 @@ object union_types:
    * Create a value of type `PaymentDeniedOrMissingAddress` by assigning the following variable to 
    * a `MissingAddress` error.
    */
-  val example2: PaymentDeniedOrMissingAddress = ???
+  val example2: PaymentDeniedOrMissingAddress = MissingAddress("wrong house number")
 
   /**
    * EXERCISE 4
@@ -96,8 +100,13 @@ object union_types:
    * Perform a pattern match on `example2`, covering each possibility and printing out the 
    * error messages to the console.
    */
-  // example2 match 
-
+  val result = example2 match 
+    case PaymentDenied(pd) => println(s"PaymentDenied : $pd")
+    case MissingAddress(ma) => println(s"Missing Address : $ma")
+  
+  @main
+  def test ={}
+    //result
 /**
  * MATCH TYPES
  * 
@@ -117,21 +126,21 @@ object match_types:
    * 
    * Construct a value of the appropriate type, which is computed using the match type `Combine`.
    */
-  val unitAndString: Combine[Unit, String] = ???
+  val unitAndString: Combine[Unit, String] = ""
 
   /**
    * EXERCISE 2
    * 
    * Construct a value of the appropriate type, which is computed using the match type `Combine`.
    */
-  val stringAndUnit: Combine[String, Unit] = ???
+  val stringAndUnit: Combine[String, Unit] = ""
 
   /**
    * EXERCISE 3
    * 
    * Construct a value of the appropriate type, which is computed using the match type `Combine`.
    */
-  val stringAndString: Combine[String, String] = ???
+  val stringAndString: Combine[String, String] = ("","")
 
   /**
    * EXERCISE 4
