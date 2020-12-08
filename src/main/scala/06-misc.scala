@@ -15,9 +15,7 @@ object trait_parameters:
    * 
    * Remove the field `console`, and instead, introduce a trait parameter.
    */
-  trait Logging:
-    def console: Console
-
+  trait Logging(val console : Console):
     def log(line: => String): Unit = console.print(line)
 
   /**
@@ -26,7 +24,7 @@ object trait_parameters:
    * Make the following class extend the trait `Logging`, and pass the trait
    * a value for its `Console` parameter.
    */
-  class StandardLogger  
+  class StandardLogger extends Logging(StandardConsole) 
 
 /**
  * EXPLICIT NULLS
@@ -42,7 +40,7 @@ object explicit_nulls:
    * Make the following code compile by giving the value a union type that 
    * includes `Null`.
    */
-  // val stringOrNull: String = null
+  val stringOrNull: String | Null = null
 
   def bar = 1
 
@@ -64,7 +62,7 @@ object creator_applications:
    * 
    * Simplify the construction of this `Logger` by using creator application.
    */
-  val logger = new Logger(println(_))
+  val logger = Logger(println(_))
 
 /**
  * PROXIES
@@ -84,7 +82,10 @@ object proxies:
    * Make the following `Console` class extend `Logger`, but rather than 
    * implementing the `log` method directly, export it from the `logger` object.
    */
-  class Console(logger: Logger):
+  class Console extends Logger:
+    
+    export this.log
+    
     def readLine(): String = scala.io.StdIn.readLine()
 
     def printLine(any: Any): Unit = println(any.toString())
@@ -104,7 +105,7 @@ object param_untupling:
    * Map over the "zipped" list of `numbers1` and `numbers2` using the 
    * `sum` function defined above.
    */
-  numbers1.zip(numbers2)
+  numbers1.zip(numbers2).map(sum(_,_))  
 
 /**
  * CONTEXT FUNCTIONS
