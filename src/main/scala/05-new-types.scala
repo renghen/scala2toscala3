@@ -104,9 +104,7 @@ object union_types:
     case PaymentDenied(pd) => println(s"PaymentDenied : $pd")
     case MissingAddress(ma) => println(s"Missing Address : $ma")
   
-  @main
-  def test ={}
-    //result
+
 /**
  * MATCH TYPES
  * 
