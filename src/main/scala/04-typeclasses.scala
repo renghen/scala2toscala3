@@ -23,7 +23,9 @@ object type_classes:
    * With the help of the `given` keyword, create an instance of the `PrettyPrint` typeclass for the 
    * data type `Person` that renders the person in a pretty way.
    */
-  // given
+  given PrettyPrint[Person]:
+    extension (a:Person):
+      def prettyPrint : String =  s"name=${a.name}, age=${a.age}"
 
   /**
    * EXERCISE 2
@@ -31,21 +33,23 @@ object type_classes:
    * With the help of the `given` keyword, create a **named* instance of the `PrettyPrint` typeclass 
    * for the data type `Int` that renders the integer in a pretty way.
    */
-  // given intPrettyPrint as ...
+  given intPrettyPrint as PrettyPrint[Int]:
+    extension (a:Int):
+      def prettyPrint : String =  a.toString()
 
   /**
    * EXERCISE 3
    * 
    * Using the `summon` function, summon an instance of `PrettyPrint` for `String`.
    */
-  val stringPrettyPrint: PrettyPrint[String] = ???
+  val stringPrettyPrint: PrettyPrint[String] = summon[PrettyPrint[String]]
 
   /**
    * EXERCISE 4
    * 
    * Using the `summon` function, summon an instance of `PrettyPrint` for `Int`.
    */
-  val intPrettyPrint: PrettyPrint[Int] = ???
+  val intPrettyPrint2: PrettyPrint[Int] = summon[PrettyPrint[Int]]
 
   /**
    * EXERCISE 5
@@ -54,7 +58,7 @@ object type_classes:
    * `A` for which a `PrettyPrint` instance exists, can both generate a pretty-print string, and 
    * print it out to the console using `println`.
    */
-  def prettyPrintIt = ???
+  def prettyPrintIt[A](a:A)(using PrettyPrint[A]) = println(a.prettyPrint)
 
   /**
    * EXERCISE 6
@@ -62,8 +66,14 @@ object type_classes:
    * With the help of both `given` and `using`, create an instance of the `PrettyPrint` type class
    * for a generic `List[A]`, given an instance of `PrettyPrint` for the type `A`.
    */
-  given [A] as PrettyPrint[List[A]]:
-    extension (a: List[A]) def prettyPrint: String = ???
+  given [A] (using pp: PrettyPrint[A]) as PrettyPrint[List[A]]:
+    extension (a: List[A]) def prettyPrint: String = 
+      a.map(_.prettyPrint).mkString("; ")
+
+  @main  
+  def testList  = 
+    val lst = List(Person("a",1),Person("b",2))
+    println(lst.prettyPrint)  
 
   /**
    * EXERCISE 7

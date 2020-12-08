@@ -104,9 +104,6 @@ object union_types:
     case PaymentDenied(pd) => println(s"PaymentDenied : $pd")
     case MissingAddress(ma) => println(s"Missing Address : $ma")
   
-  @main
-  def test ={}
-    //result
 /**
  * MATCH TYPES
  * 
@@ -152,7 +149,13 @@ object match_types:
    * Create a match type that will return Scala's `Vector` for all types except primitive types,
    * but for primitive types, will return Scala's `Array`.
    */
-  type Collection[X]
+  type Collection[X] = X match
+    case AnyVal => Array[X]
+    case ? => Vector[X]
+ 
+  // examples  
+  // import java.util._ 
+  // val tet :Collection[Int]  = Array[Int] ()
 
   /**
    * EXERCISE 5
@@ -173,7 +176,11 @@ object match_types:
    * `head` function which returns the head of the specified value (a character of a string, 
    * or the first element of an array or iterable, or the passed in value, otherwise).
    */
-  def headOf[X](x: X): ElementType[X] = ???
+  def headOf[X](x: X): ElementType[X] = x match
+    case str: String      => str.charAt(0)
+    case arr: Array[t]    => headOf(arr(0))
+    case itr: Iterable[t] => headOf(itr.head)
+    case any: AnyVal      => any  
 
   /**
    * EXERCISE 7
