@@ -173,8 +173,12 @@ object match_types:
    * `head` function which returns the head of the specified value (a character of a string, 
    * or the first element of an array or iterable, or the passed in value, otherwise).
    */
-  def headOf[X](x: X): ElementType[X] = ???
-
+  def headOf[X](x: X): ElementType[X] = x match 
+    case str :String => str.charAt(0)
+    case arr:Array[t] => headOf(arr(0))
+    case itr : Iterable[t] => headOf(itr.head)
+    case any :AnyVal => any
+    
   /**
    * EXERCISE 7
    * 
@@ -194,13 +198,16 @@ object match_types:
    * Using the `Bigger` match type, compute the element type of a polymorphic parameter, and 
    * try to return a value of this type.
    */
-  def testPolyParam[A](a: A): Bigger[A] = ???
+  def testPolyParam[A](a: A): Bigger[A] = a match
+    case float : Float => float.toDouble
+    case int : Int => int.toLong
+    case a : A  => a 
 
   type Bigger[A] = 
     A match
       case Float => Double 
       case Int => Long 
-      case ? => A
+      case A => A
 
 /**
  * OPAQUE TYPES
@@ -220,7 +227,11 @@ object opaque_types:
        * The scope of an opaque type has special privileges. Create a constructor for email that
        * takes a string, and returns an `Email`.
        */
-      def apply() = ???
+      private def isValid(email: String): Boolean =
+        if("""^\S+@\S+\.\S+$""".r.findFirstIn(email) == None) then false else true
+      
+      def apply(email:String) : Email = email  
+      def safe(email:String) : Option[Email] = if (isValid(email)) Some(email) else None
     end Email
 
     /**
@@ -229,7 +240,7 @@ object opaque_types:
      * Define an extension method to retrieve the username of an email (the part before the '@' 
      * character).
      */
-    extension (e: Email) def username: String = ???
+    extension (e: Email) def username: String = e.takeWhile(ch => ch != '@')
   end email_example
 
   import email_example._
@@ -239,7 +250,7 @@ object opaque_types:
    * 
    * Use the constructor you made to build an `Email` value given a `String`.
    */
-  lazy val exampleEmail: Email = ???
+  lazy val exampleEmail: Email = Email("renghen@yahoo.com")
 
   /**
    * EXERCISE 4
@@ -267,7 +278,7 @@ object opaque_types:
        * Define a smart constructor that, given an `Int`, may or may not return a `Natural`, 
        * depending on whether the number is a natural number (non-negative) or not.
        */
-      def fromInt(i: Int): Option[Natural] = ???
+      def fromInt(i: Int): Option[Natural] = if(i > 0) Some(i) else None
     end Natural
   end natural_example
 
@@ -279,7 +290,7 @@ object opaque_types:
    * Construct an example natural number from the number 5, and call `get` on the `Option` because
    * you know it is a natural number.
    */
-  lazy val exampleNatural: Natural = ???
+  lazy val exampleNatural: Natural = Natural.fromInt(5).get
 
   /**
    * EXERCISE 8
@@ -305,7 +316,7 @@ object polymorphic_functions:
    * 
    * Define a polymorphic function `firstFn` that does exactly what the method `firstMethod` does.
    */
-  lazy val firstFn = ???
+  lazy val firstFn = [A, B] => (t : (A,B)) => t._1
   def firstMethod[A, B](tuple: (A, B)): A = tuple._1
 
   /**
@@ -313,7 +324,7 @@ object polymorphic_functions:
    * 
    * Define a polymorphic function `secondFn` that does exactly what the method `secondMethod` does.
    */
-  lazy val secondFn = ???
+  lazy val secondFn = [A, B] => (t : (A,B)) => t._2
   def secondMethod[A, B](tuple: (A, B)): B = tuple._2
 
 /**
@@ -325,8 +336,9 @@ object polymorphic_functions:
 object dependent_functions:
   trait Entry:
     type Out
+    // val out :Out
 
-  def getMethod(entry: Entry): entry.Out = ???
+  def getMethod(entry: Entry): entry.Out = ??? //entry.out
 
   /**
    * EXERCISE 1
@@ -346,7 +358,7 @@ object dependent_functions:
    * Define a polymorphic function `combineFn` that does exactly what the method 
    * `combineMethod` does.
    */
-  lazy val combineFn = ???
+  lazy val combineFn = [L,R] => (l: L, r: R, c: Combine[L, R]) => c.combine(l, r)
   def combineMethod[L, R](l: L, r: R, c: Combine[L, R]): c.Out = c.combine(l, r)
 
 /**
@@ -371,7 +383,10 @@ object type_lambdas:
    * Define a `Sizable` for `Map` for the given key type `K`. You will have to 
    * use a type lambda.
    */
-  def sizableMap[K]: Sizable[[V] =>> Map[K, V]] = ???
+  def sizableMap[K]: Sizable[[V] =>> Map[K, V]] =
+   new Sizable[MapK[K]] : 
+     def size[V](fa : MapK[K][V]) : Int = fa.keys.size
+ 
 
   /**
    * EXERCISE 2
