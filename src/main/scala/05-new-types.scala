@@ -104,10 +104,6 @@ object union_types:
     case PaymentDenied(pd) => println(s"PaymentDenied : $pd")
     case MissingAddress(ma) => println(s"Missing Address : $ma")
   
-<<<<<<< HEAD
-=======
-
->>>>>>> 96b31d3ca247a38d0cdc5a90d6031b281a307e20
 /**
  * MATCH TYPES
  * 
@@ -180,21 +176,12 @@ object match_types:
    * `head` function which returns the head of the specified value (a character of a string, 
    * or the first element of an array or iterable, or the passed in value, otherwise).
    */
-<<<<<<< HEAD
-  def headOf[X](x: X): ElementType[X] = x match
-    case str: String      => str.charAt(0)
-    case arr: Array[t]    => headOf(arr(0))
-    case itr: Iterable[t] => headOf(itr.head)
-    case any: AnyVal      => any  
-
-=======
   def headOf[X](x: X): ElementType[X] = x match 
     case str :String => str.charAt(0)
     case arr:Array[t] => headOf(arr(0))
     case itr : Iterable[t] => headOf(itr.head)
     case any :AnyVal => any
     
->>>>>>> 96b31d3ca247a38d0cdc5a90d6031b281a307e20
   /**
    * EXERCISE 7
    * 

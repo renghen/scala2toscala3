@@ -95,15 +95,15 @@ package email:
    *
    * Rewrite the following code to not use class shadowing.
    */
-  // class UserRepo {
-  //   type User 
+  class UserRepo {
+    type User 
 
-  //   class UserOps { }
-  // }
-  // class UserAndProfileRepo extends UserRepo {
-  //   type Profile 
-  //   class UserOps { }
-  // }
+    class UserOps { }
+  }
+  class UserAndProfileRepo extends UserRepo {
+    type Profile 
+    class UserProfileOps { }
+  }
 
   /**
    * EXERCISE 9
@@ -111,16 +111,16 @@ package email:
    * Rewrite the following code to not use XML literals, using XML string
    * interpolation instead.
    */
-  // val html = <html><head></head><body><h1>Hello World</h1></body></html>
+  val html = xml"""<html><head></head><body><h1>Hello World</h1></body></html>"""
 
-  extension (sc: StringContext) def xml(args: Any*) = ???
+  extension (sc: StringContext) def xml(args: Any*) =  ""
 
   /**
    * EXERCISE 10
    * 
    * Rewrite the following code to not use symbol literals.
    */
-  // Map('int => classOf[Int], 'string => classOf[String])
+  val wer =  Map("int" -> classOf[Int], "string" -> classOf[String])
 
   /**
    * EXERCISE 11
@@ -141,6 +141,7 @@ package email:
   // acceptListDouble(list)
 
   def acceptListDouble(l: List[Double]): Unit = println(l.mkString(", "))
+  
 
   /**
    * EXERCISE 13
@@ -151,23 +152,27 @@ package email:
   import scala.util.control.NonLocalReturns._
 
   def shortCircuitingForeach(nums: Iterable[Int]): Int = 
-    returning { nums.foreach(num => if (num > 50) throwReturn(num)}  
-    return -1
+    returning { 
+      nums.foreach{ num =>
+        if (num > 50)   throwReturn(num)
+      }
+      -1 
+    }
 
   /**
    * EXERCISE 14
    * 
    * Rewrite the following code to not use `private[this]`.
    */
-  // class Counter {
-  //   private[this] var counter = 0 
-  //
-  //   def increment(): Unit = counter += 1
-  //
-  //   def decrement(): Unit = counter -= 1 
-  //
-  //   def get(): Int = counter
-  // }
+  class Counter {
+    private var counter = 0 
+  
+    def increment(): Unit = counter += 1
+  
+    def decrement(): Unit = counter -= 1 
+  
+    def get(): Int = counter
+  }
 
   
 
