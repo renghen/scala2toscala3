@@ -81,7 +81,9 @@ object type_classes:
    * With the help of both `given` and `using`, create a **named** instance of the `PrettyPrint` 
    * type class for a generic `Vector[A]`, given an instance of `PrettyPrint` for the type `A`.
    */
-  // given vectorPrettyPrint[A] as ...
+  given vectorPrettyPrint[A](using pp: PrettyPrint[A]) as  PrettyPrint[Vector[A]] :
+    extension (a: Vector[A]) def prettyPrint: String = 
+      a.map(_.prettyPrint).mkString("; ")
 
   import scala.CanEqual._ 
 
@@ -91,10 +93,15 @@ object type_classes:
    * Using the `derives` clause, derive an instance of the type class `Eql` for 
    * `Color`.
    */
-  enum Color:
+  enum Color derives CanEqual:
     case Red 
     case Green 
     case Blue
+  
+  @main
+  def mainColor =
+    println(Color.Red.canEqual(Color.Blue))
+
 
 /**
  * IMPLICIT CONVERSIONS
@@ -112,7 +119,8 @@ object conversions:
    * `Rational` (from) and `Double` (to).
    */
   // given ...
-  given Conversion[Rational, Double] = ???
+  given Conversion[Rational, Double] :
+    def apply(ratio :  Rational) : Double = ratio.n.toDouble / ratio.d
 
   /**
    * EXERCISE 2
@@ -120,4 +128,7 @@ object conversions:
    * Multiply a rational number by 2.0 (a double) to verify your automatic
    * conversion works as intended.
    */
-  Rational(1, 2)
+  @main
+  def mainRatio =
+    import scala.language.implicitConversions
+    val result = Rational(1, 2) * 2.0
