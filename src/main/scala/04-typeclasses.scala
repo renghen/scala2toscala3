@@ -24,7 +24,7 @@ object type_classes:
    * data type `Person` that renders the person in a pretty way.
    */
   given PrettyPrint[Person]:
-    extension (a:Person):
+    extension (a:Person)
       def prettyPrint : String =  s"name=${a.name}, age=${a.age}"
 
   /**
@@ -33,8 +33,8 @@ object type_classes:
    * With the help of the `given` keyword, create a **named* instance of the `PrettyPrint` typeclass 
    * for the data type `Int` that renders the integer in a pretty way.
    */
-  given intPrettyPrint as PrettyPrint[Int]:
-    extension (a:Int):
+  given intPrettyPrint as PrettyPrint[Int] :
+    extension (a:Int)
       def prettyPrint : String =  a.toString()
 
   /**
@@ -119,7 +119,7 @@ object conversions:
    * `Rational` (from) and `Double` (to).
    */
   // given ...
-  given Conversion[Rational, Double] :
+  given Conversion[Rational, Double]:
     def apply(ratio :  Rational) : Double = ratio.n.toDouble / ratio.d
 
   /**
