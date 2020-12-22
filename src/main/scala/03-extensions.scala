@@ -67,7 +67,7 @@ object ext_methods:
    */
   // implicit class StringOps(self: String):
   
-  extension (self : String):
+  extension (self : String)
      def equalsIgnoreCase(that: String) = self.toLowerCase == that.toLowerCase   
 
   object scope:

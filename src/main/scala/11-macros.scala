@@ -26,14 +26,14 @@ object macro_basics:
    * 
    * Construct an `Expr[Int]` by using the `Expr.apply` constructor on an int literal.
    */
-  def exprInt: Expr[Int] = ???
+  inline def exprInt(using Quotes) : Expr[Int]= Expr.apply(0)
 
   /**
    * EXERCISE 2
    * 
    * Construct an `Expr[String]` by using the `Expr.apply` constructor on a string literal.
    */
-  def exprString: Expr[String] = ???
+  inline def exprString(using Quotes): Expr[String] = Expr.apply("test")
 
   /**
    * EXERCISE 3
