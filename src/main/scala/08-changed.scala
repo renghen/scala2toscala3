@@ -26,9 +26,14 @@ object match_expressions:
    * 
    * Change the infix match operator into a method call.
    */
-  PaymentMethod.Amex match
+  // PaymentMethod.Amex match
+  //   case PaymentMethod.Amex => "It's an amex!"
+  //   case _ => "It's something else!"
+
+  PaymentMethod.Amex.match
     case PaymentMethod.Amex => "It's an amex!"
     case _ => "It's something else!"
+  
 
 /**
  * PROGRAMMATIC STRUCTURAL TYPES
@@ -62,7 +67,7 @@ object wildcard_types:
    */
   // def serializeMap(map: Map[_ <: String, _ <: String]) = ???
 
-  type Dummy
+  type Dummy = Map[? <: String, ? <: String]
 
 /**
  * TYPED PATTERNS
@@ -79,7 +84,8 @@ object typed_patterns:
    */
   for
     (l, r) <- Some((19, 42))
-  yield l + r
+    (_,y)  <- Some(("test",34))
+  yield l + r + y
 
 /**
  * Scala 3 introduces an open keyword that is designed for extensible classes.
@@ -90,7 +96,7 @@ object open_classes:
    * 
    * Add the keyword `open` to indicate this class is designed for extension.
    */
-  class BaseLogger:
+  open class BaseLogger:
     val logger: String => Unit = _ => ()
 
     def fine(line: String): Unit = logger(s"FINE: ${line}")
@@ -100,5 +106,5 @@ object open_classes:
    * 
    * Add the keyword `final` to indicate this class is not designed for extension.
    */
-  class ConsoleLogger extends BaseLogger:
+  final class ConsoleLogger extends BaseLogger:
     override val logger = println(_)
